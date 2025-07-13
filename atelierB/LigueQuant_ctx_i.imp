@@ -1,0 +1,11 @@
+IMPLEMENTATION LigueQuant_ctx_i
+REFINES LigueQuant_ctx
+VALUES
+    minn = 4;
+    maxx = 20;
+    LIGUE_QUANTOS = 2..7;
+    m1 = maxx-1; 
+    mm = maxx*maxx
+
+
+ END

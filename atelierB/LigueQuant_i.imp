@@ -1,0 +1,319 @@
+IMPLEMENTATION LigueQuant_i
+REFINES LigueQuant
+SEES LigueQuant_ctx
+    
+    
+CONCRETE_VARIABLES
+    round, currplayer, lin, col, lig_qnt, winner, board_i, col_history, lin_history, counter
+
+INVARIANT
+    counter : 0..mm &
+    counter = size(history) &
+    col_history : 0..mm --> 0..m1 &
+    lin_history : 0..mm --> 0..m1 &
+    (1..counter <| col_history) : 1..counter --> 0..col-1 &
+    (1..counter <| lin_history) : 1..counter --> 0..lin-1 &
+    history = % kk . (kk : 1..counter | (col_history(kk), lin_history(kk))) &
+    board_i : ((0..m1) * (0..m1)) --> PLAYERS &
+    dom(board) <| board_i = board &
+    board_i[(((0..maxx-1)*(0..maxx-1)) - dom(board))] = {emp}
+ 
+INITIALISATION
+    round := 1; currplayer := j1; lin := 7; col := 7; lig_qnt := 4; winner := emp;
+    counter := 0; col_history := (0..mm) * {0}; lin_history := (0..mm) * {0};
+    board_i := ((0..m1)*(0..m1))*{emp}
+
+OPERATIONS
+
+ret <-- play(cc) =
+    BEGIN
+    VAR top_element IN
+        top_element := board_i(cc, lin-1);
+        IF top_element = emp & winner = emp THEN
+            ret := TRUE;
+            round := round + 1;
+            VAR ll, l1 IN
+                ll := lin-1; l1 := lig_qnt-1;
+                // Acha a menor linha vazia
+                VAR ii, curr IN
+                    ii := lin; curr := emp;
+                    WHILE ii > 0
+                    DO
+                        ii := ii - 1;
+                        curr := board_i(cc, ii);
+                        IF curr = emp
+                        THEN ll := ii
+                        END
+                    INVARIANT 
+                        ii : 0..lin & curr : PLAYERS & 
+                        ll = min({lin-1}\/{jj | jj : ii..lin-1 & board_i(cc, jj) = emp})
+                    VARIANT ii
+                    END
+                END;
+                
+                board_i(cc, ll) := currplayer;
+                counter := counter + 1;
+                col_history(counter) := cc;
+                lin_history(counter) := ll;
+
+                // Checa vitoria vertical
+                VAR ii, jj, cnt ,curr, prev IN
+                    ii := cc; jj := 1; cnt := 0; 
+                    curr:= emp; prev:= emp;
+                    WHILE jj < lin & cnt /= l1
+                    DO
+                        curr := board_i(ii, jj); 
+                        prev := board_i(ii, jj-1);
+                        IF curr = currplayer & prev = curr
+                        THEN
+                            cnt := cnt + 1
+                        ELSE
+                            cnt := 0
+                        END;
+                        jj := jj + 1;
+                        IF cnt = l1
+                        THEN
+                            winner := currplayer
+                        END
+                    INVARIANT 
+                        ii : NAT & ii = cc & jj : 1..lin & 
+                        (cnt = l1 => winner = currplayer)
+                    VARIANT lin - jj
+                    END
+
+                END;
+
+                // Checa vitoria horizontal
+                VAR ii, jj, cnt, curr, prev IN
+                    ii := 1; jj := ll; cnt := 0; 
+                    curr:= emp; prev:= emp;
+                    WHILE ii < col & cnt /= l1
+                    DO
+                        curr := board_i(ii, jj); 
+                        prev := board_i(ii-1, jj);
+                        IF curr = currplayer & prev = curr
+                        THEN
+                            cnt := cnt + 1
+                        ELSE
+                            cnt := 0
+                        END;
+                        ii := ii + 1;
+                        IF cnt = l1
+                        THEN
+                            winner := currplayer
+                        END
+                    INVARIANT 
+                        jj : NAT & jj = ll & ii : 1..col & 
+                        (cnt = l1 => winner = currplayer)
+                    VARIANT col - ii
+                    END
+                END;
+                
+                // Checa diagonal '/'
+                VAR ii, jj, cnt, curr, prev, dist IN
+
+                    IF cc < ll
+                    THEN dist := cc
+                    ELSE dist := ll
+                    END;
+                    
+                    IF lig_qnt < dist
+                    THEN dist := lig_qnt
+                    END;
+                    
+                    ii := cc - dist + 1; 
+                    jj := ll - dist + 1; 
+                    cnt := 0;
+                    curr := emp; prev := emp;
+                    WHILE ii < col & jj < lin & cnt /= l1
+                    DO
+                        curr := board_i(ii, jj); 
+                        prev := board_i(ii-1, jj-1);
+                        IF curr = currplayer & prev = curr
+                        THEN
+                            cnt := cnt + 1
+                        ELSE
+                            cnt := 0
+                        END;
+                        ii := ii + 1; jj := jj + 1;
+                        IF cnt = l1
+                        THEN
+                            winner := currplayer
+                        END
+                    INVARIANT 
+                        jj : 1..lin & ii : 1..col & 
+                        (cnt = lig_qnt-1 => winner = currplayer)
+                    VARIANT col - ii
+                    END
+                END;
+
+                // Checa diagonal '\'
+                VAR ii, jj, cnt, curr, prev, dist, l2 IN
+                
+                    l2 := lin - ll - 1;
+                    IF cc < l2
+                    THEN dist := cc
+                    ELSE dist := l2
+                    END;
+                    
+                    IF lig_qnt < dist
+                    THEN dist := lig_qnt
+                    END;
+                        
+                    ii := cc - dist + 1; 
+                    jj := ll + dist - 1; 
+                    cnt := 0;
+                    curr := emp; prev := emp;
+                    WHILE ii < col & jj >= 0 & cnt /= l1
+                    DO
+                        curr := board_i(ii, jj); 
+                        prev := board_i(ii-1, jj+1);
+                        IF curr = currplayer & prev = curr
+                        THEN
+                            cnt := cnt + 1
+                        ELSE
+                            cnt := 0
+                        END;
+                        ii := ii + 1; jj := jj - 1;
+                        IF cnt = l1
+                        THEN
+                            winner := currplayer
+                        END
+                    INVARIANT 
+                        jj : -1..lin-1 & ii : 1..col & 
+                        (cnt = lig_qnt-1 => winner = currplayer)
+                    VARIANT col - ii
+                    END
+                END;
+
+                IF currplayer = j1
+                THEN currplayer := j2
+                ELSE currplayer := j1
+                END
+            END
+        ELSE
+        ret := FALSE
+        END
+    END
+    END;
+
+reset =
+    BEGIN
+    round := 1; currplayer := j1; winner := emp; counter := 0;
+    // Inicializa board como emp
+    board_i := ((0..m1)*(0..m1))*{emp}
+    END;
+
+ret <-- undo_move =
+    BEGIN
+        IF winner = emp & counter > 0 THEN
+            board_i(col_history(counter), lin_history(counter)) := emp;
+            ret := TRUE; counter := counter - 1; round := round - 1;
+            IF currplayer = j1
+            THEN currplayer := j2
+            ELSE currplayer := j1
+            END
+        ELSE
+            ret := FALSE
+        END
+    END;
+
+ret <-- undo_moves(nn) =
+    BEGIN
+        IF winner  = emp & counter >= nn & round > nn THEN
+        
+        
+        
+        VAR mm IN
+        mm := (round - nn) mod 2;
+        IF mm = 0 THEN
+            currplayer := j2
+        ELSE
+            currplayer := j1
+        END
+        END;
+        ret := TRUE;
+        
+        VAR counter_target, curr_counter IN
+        curr_counter := counter; counter_target := counter - nn;
+        WHILE curr_counter > counter_target
+        DO 
+            board_i(col_history(curr_counter), lin_history(curr_counter)) := emp; 
+            curr_counter := curr_counter - 1
+        INVARIANT 
+            counter_target : 0..maxx*maxx &
+            curr_counter : 0..maxx*maxx & 
+            counter_target <= curr_counter &
+            board_i[ran(%ii . (ii : (curr_counter+1)..counter | col_history(ii), lin_history(ii)))] <: {emp}
+        VARIANT curr_counter - counter_target
+        END
+        END;
+        counter := counter - nn; 
+        round := round - nn
+        
+    ELSE
+        ret := FALSE
+    END
+    END;
+
+ret <-- change_game_rules(ll, cc, qnt) =
+    BEGIN
+        IF counter = 0 & ll >= qnt & cc >= qnt THEN
+        ret := TRUE; lin := ll; col := cc; lig_qnt := qnt;
+        board_i := ((0..m1)*(0..m1))*{emp}
+    ELSE
+        ret := FALSE
+    END
+    END;
+
+
+// Queries
+
+rr <-- query_round = 
+    BEGIN
+    rr := round
+    END;
+
+jj <-- query_player =
+    BEGIN
+    jj := currplayer
+    END;
+
+end, ww <-- query_game_end =
+    BEGIN
+    VAR history_max_sze
+    IN
+    history_max_sze := (lin)*(col);
+    IF winner /= emp or counter = history_max_sze THEN
+        end := TRUE; ww := winner
+    ELSE
+        end := FALSE; ww := winner
+    END
+    END
+    END;
+
+ll <-- query_lin =
+    BEGIN
+    ll := lin
+    END;
+
+cc <-- query_col =
+    BEGIN
+    cc := col
+    END;
+
+qq <-- query_lig_qnt =
+    BEGIN
+    qq := lig_qnt
+    END;
+
+bb, cc, ll <-- query_board =
+    BEGIN
+    bb := board_i; cc := col; ll := lin
+    END;
+
+hcol, hlin, ii <-- query_history =
+    BEGIN
+    hcol := col_history; hlin := lin_history; ii := counter
+    END
+END
