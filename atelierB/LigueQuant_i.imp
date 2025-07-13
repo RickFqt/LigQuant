@@ -77,7 +77,10 @@ ret <-- play(cc) =
                         END
                     INVARIANT 
                         ii : NAT & ii = cc & jj : 1..lin & 
-                        (cnt = l1 => winner = currplayer)
+                        (cnt = l1 => winner = currplayer) &
+                        #(ww) . (ww : 0..jj-lig_qnt & 
+                                !kk . ((kk : ww..ww+lig_qnt-1 ) => board_i(ii,kk) = currplayer))
+                        <=> (cnt = l1)
                     VARIANT lin - jj
                     END
 
@@ -104,7 +107,10 @@ ret <-- play(cc) =
                         END
                     INVARIANT 
                         jj : NAT & jj = ll & ii : 1..col & 
-                        (cnt = l1 => winner = currplayer)
+                        (cnt = l1 => winner = currplayer) &
+                        #(hh) . (hh : 0..ii-lig_qnt & 
+                                !kk . ((kk : hh..hh+lig_qnt-1 ) => board_i(kk,jj) = currplayer))
+                        <=> (cnt = l1)
                     VARIANT col - ii
                     END
                 END;
@@ -142,7 +148,10 @@ ret <-- play(cc) =
                         END
                     INVARIANT 
                         jj : 1..lin & ii : 1..col & 
-                        (cnt = lig_qnt-1 => winner = currplayer)
+                        (cnt = lig_qnt-1 => winner = currplayer) &
+                        #(hh,ww) . (hh : 0..ii-lig_qnt & 
+                                    ww : 0..jj-lig_qnt & !(kk).(kk : 0..lig_qnt-1 => board_i(hh+kk,ww+kk) = currplayer))
+                        <=> (cnt = l1)
                     VARIANT col - ii
                     END
                 END;
@@ -181,7 +190,10 @@ ret <-- play(cc) =
                         END
                     INVARIANT 
                         jj : -1..lin-1 & ii : 1..col & 
-                        (cnt = lig_qnt-1 => winner = currplayer)
+                        (cnt = lig_qnt-1 => winner = currplayer) &
+                        #(hh,ww) . (hh : 0..ii-lig_qnt & 
+                                    ww : lig_qnt-1..jj-1 & !(kk).(kk : 0..lig_qnt-1 => board_i(hh+kk,ww-kk) = currplayer))
+                        <=> (cnt = l1)
                     VARIANT col - ii
                     END
                 END;
