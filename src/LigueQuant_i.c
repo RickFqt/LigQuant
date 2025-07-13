@@ -231,7 +231,7 @@ void LigueQuant__play(int32_t cc, bool *ret)
                     curr = LigueQuant_ctx__emp;
                     prev = LigueQuant_ctx__emp;
                     while((((ii) < (LigueQuant__col)) &&
-                        ((jj) > (0))) &&
+                        ((jj) >= (0))) &&
                     ((cnt) != (l1)))
                     {
                         curr = LigueQuant__board_i[ii][jj];
