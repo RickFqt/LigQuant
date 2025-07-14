@@ -17,7 +17,7 @@ VARIABLES
     history, round, currplayer, lin, col, lig_qnt, board, winner
 
 INVARIANT
-    round : NAT1 &
+    round : NAT1 & round <= mm + 1 &
     currplayer : PLAYERS & currplayer /= emp & lin : NAT1 & col : NAT1 & 
     history : seq((0..col-1)*(0..lin-1)) & 
     size(history) <= maxx*maxx &
@@ -110,7 +110,7 @@ OPERATIONS
 ret <-- play(cc) =
     PRE cc : NAT & round +1 : NAT1
     THEN 
-        IF cc : 0..col-1 & board(cc, lin-1) = emp & winner = emp THEN
+        IF cc : 0..col-1 & board(cc, lin-1) = emp & winner = emp & round < mm + 1 THEN
             LET newboard BE newboard = board <+ {(cc, min({xx | xx : 0..lin-1 & board(cc, xx) = emp})) |-> currplayer} IN
                 // Condicao de vitoria coluna
                 IF (#(cc,ll) . (cc : 0..col-1 & ll : 0..lin-lig_qnt & !jj . ((jj : ll..ll+lig_qnt-1 ) => newboard(cc,jj) = currplayer))) 

@@ -58,10 +58,11 @@ void LigueQuant__play(int32_t cc, bool *ret)
         LigueQuant_ctx__PLAYERS top_element;
         
         top_element = LigueQuant__board_i[cc][LigueQuant__lin-1];
-        if(((((cc) >= (0)) &&
-                ((cc) < (LigueQuant__col))) &&
-            (top_element == LigueQuant_ctx__emp)) &&
-        (LigueQuant__winner == LigueQuant_ctx__emp))
+        if((((((cc) >= (0)) &&
+                    ((cc) < (LigueQuant__col))) &&
+                (top_element == LigueQuant_ctx__emp)) &&
+            (LigueQuant__winner == LigueQuant_ctx__emp)) &&
+        ((LigueQuant__round) <= (LigueQuant_ctx__mm)))
         {
             (*ret) = true;
             LigueQuant__round = LigueQuant__round+1;

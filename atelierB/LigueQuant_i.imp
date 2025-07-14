@@ -29,7 +29,7 @@ ret <-- play(cc) =
     BEGIN
     VAR top_element IN
         top_element := board_i(cc, lin-1);
-        IF cc >= 0 & cc < col & top_element = emp & winner = emp THEN
+        IF cc >= 0 & cc < col & top_element = emp & winner = emp & round <= mm THEN
             ret := TRUE;
             round := round + 1;
             VAR ll, l1 IN
