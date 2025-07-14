@@ -58,7 +58,9 @@ void LigueQuant__play(int32_t cc, bool *ret)
         LigueQuant_ctx__PLAYERS top_element;
         
         top_element = LigueQuant__board_i[cc][LigueQuant__lin-1];
-        if((top_element == LigueQuant_ctx__emp) &&
+        if(((((cc) >= (0)) &&
+                ((cc) < (LigueQuant__col))) &&
+            (top_element == LigueQuant_ctx__emp)) &&
         (LigueQuant__winner == LigueQuant_ctx__emp))
         {
             (*ret) = true;
@@ -357,7 +359,13 @@ void LigueQuant__change_game_rules(int32_t ll, int32_t cc, int32_t qnt, bool *re
 {
     unsigned int i = 0, j= 0;
     {
-        if(((LigueQuant__counter == 0) &&
+        if((((((((((ll) >= (LigueQuant_ctx__minn)) &&
+                                    ((ll) <= (LigueQuant_ctx__maxx))) &&
+                                ((cc) >= (LigueQuant_ctx__minn))) &&
+                            ((cc) <= (LigueQuant_ctx__maxx))) &&
+                        ((qnt) >= (LigueQuant_ctx__ligue_quantos_min))) &&
+                    ((qnt) <= (LigueQuant_ctx__ligue_quantos_max))) &&
+                (LigueQuant__counter == 0)) &&
             ((ll) >= (qnt))) &&
         ((cc) >= (qnt)))
         {

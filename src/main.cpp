@@ -150,41 +150,23 @@ public:
         std::cout << "\nChoice: ";
     }
     
-    int getIntInput(const std::string& prompt, int min_val = INT_MIN, int max_val = INT_MAX) {
-        int value;
-        while (true) {
-            std::cout << prompt;
-            if (std::cin >> value && value >= min_val && value <= max_val) {
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                return value;
-            } else {
-                std::cout << "Invalid input. Please enter a number";
-                if (min_val != INT_MIN || max_val != INT_MAX) {
-                    std::cout << " between " << min_val << " and " << max_val;
-                }
-                std::cout << ".\n";
-                std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            }
-        }
-    }
-    
     void playMove() {
         int32_t column;
         std::cout << "Enter column number (0-" + std::to_string(board_cols-1) + "): "; 
         std::cin >> column;
+        std::cin.ignore();
         
         bool success;
         LigueQuant__play(column, &success);
         
         if (success) {
-            std::cout << "✓ Move played successfully!\n";
+            // std::cout << "✓ Move played successfully!\n";
         } else {
             std::cout << "✗ Invalid move! Column might be full or game has ended.\n";
+            std::cout << "Press Enter to continue...";
+            std::cin.get();
         }
         
-        std::cout << "Press Enter to continue...";
-        std::cin.get();
     }
     
     void undoMove() {
@@ -192,38 +174,39 @@ public:
         LigueQuant__undo_move(&success);
         
         if (success) {
-            std::cout << "✓ Last move undone successfully!\n";
+            // std::cout << "✓ Last move undone successfully!\n";
         } else {
             std::cout << "✗ Cannot undo move! No moves to undo or game has ended.\n";
+            std::cout << "Press Enter to continue...";
+            std::cin.get();
         }
         
-        std::cout << "Press Enter to continue...";
-        std::cin.get();
     }
     
     void undoMultipleMoves() {
         int32_t num_moves;
         std::cout << "How many moves to undo? ";
         std::cin >> num_moves;
+        std::cin.ignore();
         
         bool success;
         LigueQuant__undo_moves(num_moves, &success);
         
         if (success) {
-            std::cout << "✓ " << num_moves << " moves undone successfully!\n";
+            // std::cout << "✓ " << num_moves << " moves undone successfully!\n";
         } else {
             std::cout << "✗ Cannot undo " << num_moves << " moves! Not enough moves or game has ended.\n";
+            std::cout << "Press Enter to continue...";
+            std::cin.get();
         }
         
-        std::cout << "Press Enter to continue...";
-        std::cin.get();
     }
     
     void resetGame() {
         LigueQuant__reset();
-        std::cout << "✓ Game reset successfully!\n";
-        std::cout << "Press Enter to continue...";
-        std::cin.get();
+        // std::cout << "✓ Game reset successfully!\n";
+        // std::cout << "Press Enter to continue...";
+        // std::cin.get();
     }
     
     void changeGameRules() {
@@ -232,14 +215,15 @@ public:
         std::cout << "- Connect: " << lig_quantity << "\n\n";
         
         int32_t new_lines; 
-        std::cout <<"Enter new number of lines (4-20): ";
+        std::cout <<"Enter new number of lines (" + std::to_string(LigueQuant_ctx__minn) + "-" + std::to_string(LigueQuant_ctx__maxx) + "):";
         std::cin >> new_lines;
         int32_t new_cols; 
-        std::cout <<"Enter new number of columns (4-20): ";
+        std::cout <<"Enter new number of columns (" + std::to_string(LigueQuant_ctx__minn) + "-" + std::to_string(LigueQuant_ctx__maxx) + "):";
         std::cin >> new_cols;
         int32_t new_connect; 
-        std::cout <<"Enter new connect quantity: ";
+        std::cout <<"Enter new connect quantity (" + std::to_string(LigueQuant_ctx__ligue_quantos_min) + "-" + std::to_string(LigueQuant_ctx__ligue_quantos_max) + "):";
         std::cin >> new_connect;
+        std::cin.ignore();
         
         bool success;
         LigueQuant__change_game_rules(new_lines, new_cols, new_connect, &success);
@@ -250,9 +234,9 @@ public:
         } else {
             std::cout << "✗ Cannot change rules! Game might be in progress or invalid parameters.\n";
         }
-        
         std::cout << "Press Enter to continue...";
         std::cin.get();
+        
     }
     
     void viewGameHistory() {
@@ -296,6 +280,9 @@ public:
             
             if (game_ended) {
                 std::cout << "Game has ended! Choose an action:\n";
+                std::cout << "1. Play a move (enter column number)\n";
+                std::cout << "2. Undo last move\n";
+                std::cout << "3. Undo multiple moves\n";
                 std::cout << "4. Reset game\n";
                 std::cout << "5. Change game rules\n";
                 std::cout << "6. View game history\n";
@@ -311,31 +298,13 @@ public:
             
             switch (choice) {
                 case 1:
-                    if (!game_ended) {
-                        playMove();
-                    } else {
-                        std::cout << "Game has ended! Cannot play moves.\n";
-                        std::cout << "Press Enter to continue...";
-                        std::cin.get();
-                    }
+                    playMove();
                     break;
                 case 2:
-                    if (!game_ended) {
-                        undoMove();
-                    } else {
-                        std::cout << "Game has ended! Cannot undo moves.\n";
-                        std::cout << "Press Enter to continue...";
-                        std::cin.get();
-                    }
+                    undoMove();
                     break;
                 case 3:
-                    if (!game_ended) {
-                        undoMultipleMoves();
-                    } else {
-                        std::cout << "Game has ended! Cannot undo moves.\n";
-                        std::cout << "Press Enter to continue...";
-                        std::cin.get();
-                    }
+                    undoMultipleMoves();
                     break;
                 case 4:
                     resetGame();
