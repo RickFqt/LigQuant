@@ -227,7 +227,7 @@ ret <-- undo_moves(nn) =
     3) Nenhuma jogada ainda foi feita
 */
 ret <-- change_game_rules(ll, cc, qnt) =
-    PRE ll : NAT & cc : NAT & qnt : NAT & ll : minn..maxx & cc : minn..maxx & qnt : LIGUE_QUANTOS
+    PRE ll : NAT & cc : NAT & qnt : NAT
     THEN IF ll : minn..maxx & cc : minn..maxx & qnt : LIGUE_QUANTOS & history = [] & ll >= qnt & cc >= qnt THEN
         ret := TRUE || lin := ll || col := cc || lig_qnt := qnt || board := ((0..cc-1) * (0..ll-1)) * {emp}
     ELSE
