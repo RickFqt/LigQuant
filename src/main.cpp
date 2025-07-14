@@ -162,7 +162,7 @@ public:
         if (success) {
             // std::cout << "✓ Move played successfully!\n";
         } else {
-            std::cout << "✗ Invalid move! Column might be full or game has ended.\n";
+            std::cout << "✗ Invalid move! Column might be full, invalid or game has ended.\n";
             std::cout << "Press Enter to continue...";
             std::cin.get();
         }

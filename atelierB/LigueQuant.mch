@@ -21,7 +21,8 @@ INVARIANT
     currplayer : PLAYERS & currplayer /= emp & lin : NAT1 & col : NAT1 & 
     history : seq((0..col-1)*(0..lin-1)) & 
     size(history) <= maxx*maxx &
-    lig_qnt : LIGUE_QUANTOS & lin : minn..maxx  & 
+    lig_qnt : NAT1 & lig_qnt : ligue_quantos_min..ligue_quantos_max &
+    lin : minn..maxx  & 
     col : minn..maxx &
     board : ((0..col-1) * (0..lin-1)) --> PLAYERS &
     // History mantém exatamente todos os elementos não vazios do board
@@ -228,7 +229,7 @@ ret <-- undo_moves(nn) =
 */
 ret <-- change_game_rules(ll, cc, qnt) =
     PRE ll : NAT & cc : NAT & qnt : NAT
-    THEN IF ll : minn..maxx & cc : minn..maxx & qnt : LIGUE_QUANTOS & history = [] & ll >= qnt & cc >= qnt THEN
+    THEN IF ll : minn..maxx & cc : minn..maxx & qnt : ligue_quantos_min..ligue_quantos_max & history = [] & ll >= qnt & cc >= qnt THEN
         ret := TRUE || lin := ll || col := cc || lig_qnt := qnt || board := ((0..cc-1) * (0..ll-1)) * {emp}
     ELSE
         ret := FALSE
