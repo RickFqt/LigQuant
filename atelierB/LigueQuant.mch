@@ -107,9 +107,9 @@ OPERATIONS
 */
 
 ret <-- play(cc) =
-    PRE cc : NAT & cc : 0..col-1 & round +1 : NAT1
+    PRE cc : NAT & round +1 : NAT1
     THEN 
-        IF board(cc, lin-1) = emp & winner = emp THEN
+        IF cc : 0..col-1 & board(cc, lin-1) = emp & winner = emp THEN
             LET newboard BE newboard = board <+ {(cc, min({xx | xx : 0..lin-1 & board(cc, xx) = emp})) |-> currplayer} IN
                 // Condicao de vitoria coluna
                 IF (#(cc,ll) . (cc : 0..col-1 & ll : 0..lin-lig_qnt & !jj . ((jj : ll..ll+lig_qnt-1 ) => newboard(cc,jj) = currplayer))) 
@@ -228,7 +228,7 @@ ret <-- undo_moves(nn) =
 */
 ret <-- change_game_rules(ll, cc, qnt) =
     PRE ll : NAT & cc : NAT & qnt : NAT & ll : minn..maxx & cc : minn..maxx & qnt : LIGUE_QUANTOS
-    THEN IF history = [] & ll >= qnt & cc >= qnt THEN
+    THEN IF ll : minn..maxx & cc : minn..maxx & qnt : LIGUE_QUANTOS & history = [] & ll >= qnt & cc >= qnt THEN
         ret := TRUE || lin := ll || col := cc || lig_qnt := qnt || board := ((0..cc-1) * (0..ll-1)) * {emp}
     ELSE
         ret := FALSE

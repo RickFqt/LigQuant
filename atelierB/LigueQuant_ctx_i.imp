@@ -4,8 +4,10 @@ VALUES
     minn = 4;
     maxx = 20;
     LIGUE_QUANTOS = 2..7;
+    ligue_quantos_min = 2;
+    ligue_quantos_max = 7;
     m1 = maxx-1; 
     mm = maxx*maxx
 
 
- END
+END

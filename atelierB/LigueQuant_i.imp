@@ -29,7 +29,7 @@ ret <-- play(cc) =
     BEGIN
     VAR top_element IN
         top_element := board_i(cc, lin-1);
-        IF top_element = emp & winner = emp THEN
+        IF cc >= 0 & cc < col & top_element = emp & winner = emp THEN
             ret := TRUE;
             round := round + 1;
             VAR ll, l1 IN
@@ -279,7 +279,7 @@ ret <-- undo_moves(nn) =
 
 ret <-- change_game_rules(ll, cc, qnt) =
     BEGIN
-        IF counter = 0 & ll >= qnt & cc >= qnt THEN
+        IF ll >= minn & ll <= maxx & cc >= minn & cc <= maxx & qnt >= ligue_quantos_min & qnt <= ligue_quantos_max & counter = 0 & ll >= qnt & cc >= qnt THEN
         ret := TRUE; lin := ll; col := cc; lig_qnt := qnt;
         board_i := ((0..m1)*(0..m1))*{emp}
     ELSE
