@@ -102,7 +102,7 @@ void LigueQuant__play(int32_t cc, bool *ret)
                     curr = LigueQuant_ctx__emp;
                     prev = LigueQuant_ctx__emp;
                     while(((jj) < (LigueQuant__lin)) &&
-                    ((cnt) != (l1)))
+                    ((cnt) < (l1)))
                     {
                         curr = LigueQuant__board_i[ii][jj];
                         prev = LigueQuant__board_i[ii][jj-1];
@@ -135,7 +135,7 @@ void LigueQuant__play(int32_t cc, bool *ret)
                     curr = LigueQuant_ctx__emp;
                     prev = LigueQuant_ctx__emp;
                     while(((ii) < (LigueQuant__col)) &&
-                    ((cnt) != (l1)))
+                    ((cnt) < (l1)))
                     {
                         curr = LigueQuant__board_i[ii][jj];
                         prev = LigueQuant__board_i[ii-1][jj];
@@ -182,7 +182,7 @@ void LigueQuant__play(int32_t cc, bool *ret)
                     prev = LigueQuant_ctx__emp;
                     while((((ii) < (LigueQuant__col)) &&
                         ((jj) < (LigueQuant__lin))) &&
-                    ((cnt) != (l1)))
+                    ((cnt) < (l1)))
                     {
                         curr = LigueQuant__board_i[ii][jj];
                         prev = LigueQuant__board_i[ii-1][jj-1];
@@ -232,7 +232,7 @@ void LigueQuant__play(int32_t cc, bool *ret)
                     prev = LigueQuant_ctx__emp;
                     while((((ii) < (LigueQuant__col)) &&
                         ((jj) >= (0))) &&
-                    ((cnt) != (l1)))
+                    ((cnt) < (l1)))
                     {
                         curr = LigueQuant__board_i[ii][jj];
                         prev = LigueQuant__board_i[ii-1][jj+1];
@@ -319,10 +319,10 @@ void LigueQuant__undo_moves(int32_t nn, bool *ret)
     ((LigueQuant__round) > (nn)))
     {
         {
-            int32_t mm;
+            int32_t kk;
             
-            mm = (LigueQuant__round-nn) % 2;
-            if(mm == 0)
+            kk = (LigueQuant__round-nn) % 2;
+            if(kk == 0)
             {
                 LigueQuant__currplayer = LigueQuant_ctx__j2;
             }
