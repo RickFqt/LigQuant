@@ -170,8 +170,9 @@ public:
     }
     
     void playMove() {
-        int32_t column = getIntInput("Enter column number (0-" + std::to_string(board_cols-1) + "): ", 
-                                   0, board_cols-1);
+        int32_t column;
+        std::cout << "Enter column number (0-" + std::to_string(board_cols-1) + "): "; 
+        std::cin >> column;
         
         bool success;
         LigueQuant__play(column, &success);
@@ -201,7 +202,9 @@ public:
     }
     
     void undoMultipleMoves() {
-        int32_t num_moves = getIntInput("How many moves to undo? ", 1, 100);
+        int32_t num_moves;
+        std::cout << "How many moves to undo? ";
+        std::cin >> num_moves;
         
         bool success;
         LigueQuant__undo_moves(num_moves, &success);
@@ -228,9 +231,15 @@ public:
         std::cout << "- Board size: " << board_cols << " x " << board_lines << "\n";
         std::cout << "- Connect: " << lig_quantity << "\n\n";
         
-        int32_t new_lines = getIntInput("Enter new number of lines (4-20): ", 4, 20);
-        int32_t new_cols = getIntInput("Enter new number of columns (4-20): ", 4, 20);
-        int32_t new_connect = getIntInput("Enter new connect quantity: ", 2, std::min(new_lines, new_cols));
+        int32_t new_lines; 
+        std::cout <<"Enter new number of lines (4-20): ";
+        std::cin >> new_lines;
+        int32_t new_cols; 
+        std::cout <<"Enter new number of columns (4-20): ";
+        std::cin >> new_cols;
+        int32_t new_connect; 
+        std::cout <<"Enter new connect quantity: ";
+        std::cin >> new_connect;
         
         bool success;
         LigueQuant__change_game_rules(new_lines, new_cols, new_connect, &success);
