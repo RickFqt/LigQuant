@@ -245,9 +245,9 @@ ret <-- undo_moves(nn) =
         
         
         
-        VAR mm IN
-        mm := (round - nn) mod 2;
-        IF mm = 0 THEN
+        VAR kk IN
+        kk := (round - nn) mod 2;
+        IF kk = 0 THEN
             currplayer := j2
         ELSE
             currplayer := j1
